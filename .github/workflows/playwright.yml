@@ -44,7 +44,7 @@ jobs:
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
 
-      # Run Playwright tests
+            # Run Playwright tests
       - name: Run tests
         run: npx playwright test --reporter=html
 
@@ -53,14 +53,15 @@ jobs:
         id: timestamp
         run: echo "ts=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
-      # Upload Playwright report using the timestamp
+      # Upload Playwright report with timestamped artifact name
       - name: Upload Playwright HTML Report
-        if: always()                # Always upload, even on failures
-        uses: actions/upload-artifact@v3
+        if: always()   # Always upload, even when tests fail
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ steps.timestamp.outputs.ts }}
-          path: playwright-report
+          path: playwright-report/
           retention-days: 15
+
 
       # (Optional) Placeholder for Slack/Jira integration
       - name: Post to Jira (placeholder)
