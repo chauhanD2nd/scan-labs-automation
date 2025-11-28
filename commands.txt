@@ -1,0 +1,10 @@
+$env:BASE_URL="https://development.prism.deepstain.com"; `
+$env:USER_EMAIL="myemail"; `
+$env:USER_PASSWORD="mypassword"; `
+npx playwright test --project=chromium --headed
+
+
+$env:BASE_URL="https://development.prism.deepstain.com"; `
+$env:USER_EMAIL="myemail"; `
+$env:USER_PASSWORD="mypassword"; `
+npx playwright test test tests/login.spec.ts

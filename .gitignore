@@ -1,0 +1,18 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+# Environment variables (local only)
+env.ps1
+env-local.ps1
+*.env
+/config/env.ps1
+
+# Playwright auth session
+auth.json
+# IDE junk
+.vscode/
