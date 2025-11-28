@@ -9,7 +9,7 @@ on:
     - cron: "30 3 * * *"
 
 jobs:
-  test:
+  e2e-tests:
     runs-on: ubuntu-latest   # Clean Ubuntu VM
 
     steps:
