@@ -29,6 +29,7 @@ jobs:
 
       # Install Playwright browsers
       - name: Install browsers (Only Chromium - faster CI)
+      #  run: npx playwright install --with-deps -- this will install all browsers
         run: npx playwright install chromium --with-deps
 
       # Set environment variables from GitHub Secrets
