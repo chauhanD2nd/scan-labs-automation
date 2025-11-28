@@ -2,23 +2,22 @@ name: Playwright Tests
 
 # --- Triggers ---
 on:
-  push:        # 1. Run tests on every push to the repo
+  push:        # Run tests on every push
     branches: [ "main", "master" ]
-  workflow_dispatch:   # 2. Allow running tests manually from GitHub UI
-  schedule:            # 3. Daily run at 9 AM IST (03:30 UTC)
+  workflow_dispatch:   # Allow manual trigger
+  schedule:            # Daily at 9 AM IST (03:30 UTC)
     - cron: "30 3 * * *"
 
-# --- Job definition ---
 jobs:
   test:
-    runs-on: ubuntu-latest   # Use clean Ubuntu VM
+    runs-on: ubuntu-latest   # Clean Ubuntu VM
 
     steps:
       # Checkout repo
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Install Node + Playwright system deps
+      # Install Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -32,8 +31,7 @@ jobs:
       - name: Install browsers
         run: npx playwright install --with-deps
 
-      # Set environment variables (no secrets stored in code)
-      # Secrets should be configured on GitHub → Repo Settings → Secrets → Actions
+      # Set environment variables from GitHub Secrets
       - name: Set ENV variables
         run: |
           echo "BASE_URL=$BASE_URL" >> $GITHUB_ENV
@@ -44,26 +42,30 @@ jobs:
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
 
-            # Run Playwright tests
+      # Run Playwright tests
       - name: Run tests
         run: npx playwright test --reporter=html
 
-      # Generate timestamp for artifact naming (yyyyMMdd-HHmmss)
+      # Generate timestamp
       - name: Generate timestamp
         id: timestamp
         run: echo "ts=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
-      # Upload Playwright report with timestamped artifact name
+      # Upload HTML report with timestamp
       - name: Upload Playwright HTML Report
-        if: always()   # Always upload, even when tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ steps.timestamp.outputs.ts }}
           path: playwright-report/
           retention-days: 15
 
+      # Dummy Slack notification
+      - name: Slack Notification (placeholder)
+        if: always()
+        run: echo "Slack notification goes here."
 
-      # (Optional) Placeholder for Slack/Jira integration
+      # Dummy Jira integration
       - name: Post to Jira (placeholder)
         if: always()
         run: echo "Jira integration goes here."

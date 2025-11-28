@@ -88,7 +88,6 @@ test.describe("Dashboard Tests", () => {
     await dashboardPage.isLoaded();
 
     // Wait for the section to be fully ready
-    Logger.step("Waiting for Staining Usage Overview Table data to load");
     await dashboardPage.waitForStainingUsageToLoad();
     //await expect(true).toBe(false);
 
