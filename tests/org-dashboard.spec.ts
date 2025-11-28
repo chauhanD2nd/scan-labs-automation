@@ -90,7 +90,7 @@ test.describe("Dashboard Tests", () => {
     // Wait for the section to be fully ready
     Logger.step("Waiting for Staining Usage Overview Table data to load");
     await dashboardPage.waitForStainingUsageToLoad();
-    await expect(true).toBe(false);
+    //await expect(true).toBe(false);
 
     // IHC Row
     Logger.step("Asserting IHC row metrics");
