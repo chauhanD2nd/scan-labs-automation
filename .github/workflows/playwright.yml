@@ -54,7 +54,7 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
-          retention-days: 5
+          retention-days: 10
 
       # (Optional) Placeholder for Slack/Jira integration
       - name: Post to Jira (placeholder)
