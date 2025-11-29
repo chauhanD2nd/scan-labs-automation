@@ -2,22 +2,25 @@ import { test, expect } from "@playwright/test";
 import { OrganizationReportsPage } from "../pages/org-reports.page";
 import { OrgDashboardPage } from "../pages/org-dashboard.page";
 import { loginToDashboard } from "../helpers/login.helper";
-import { getCurrentQuarterText, getCurrentYear } from "../utils/helpers";
+import {
+  generateTimestampString,
+  getCurrentQuarterText,
+  getCurrentYear,
+} from "../utils/helpers";
 import { Logger } from "../utils/logger";
 
 test.beforeEach(async ({ page }) => {
   Logger.step("Logging into dashboard");
-    await loginToDashboard(page);
+  await loginToDashboard(page);
 
-    Logger.step("Navigating to Reports");
-    const dashboard = new OrgDashboardPage(page);
-    await dashboard.isLoaded();
-    await dashboard.expandNavigation();
-    await dashboard.navReports.click();
+  Logger.step("Navigating to Reports");
+  const dashboard = new OrgDashboardPage(page);
+  await dashboard.isLoaded();
+  await dashboard.expandNavigation();
+  await dashboard.navReports.click();
 });
 
 test("Reports Page: headings and tab visibility", async ({ page }) => {
-
   const reports = new OrganizationReportsPage(page);
   await reports.isLoaded();
 
@@ -32,7 +35,6 @@ test("Reports Page: headings and tab visibility", async ({ page }) => {
 });
 
 test("Reports Page: STAIN tab contents", async ({ page }) => {
-
   const reports = new OrganizationReportsPage(page);
   await reports.isLoaded();
 
@@ -91,4 +93,71 @@ test("Reports: IHC panel expand, validate content and collapse", async ({
   await expect(reports.ihcDownloadBtn).not.toBeVisible({
     timeout: 8000,
   });
+});
+
+test("Reports: Users tab -- search box + user list visibility", async ({
+  page,
+}) => {
+  const reports = new OrganizationReportsPage(page);
+  await reports.isLoaded();
+
+  Logger.step("Switch to USERS tab");
+  await reports.usersTab.click();
+
+  Logger.step("Validate users search field is visible");
+  await expect(reports.usersSearchField).toBeVisible();
+
+  Logger.step("Validate user list has at least 1 user");
+  // Waiting manually because load may take time
+  await page.waitForTimeout(5000);
+
+  const userCount = await reports.userEmailList.count();
+  Logger.info(`User count found = ${userCount}`);
+
+  expect(userCount).toBeGreaterThan(0);
+});
+
+test("Users Tab: Logged-in user appears with View User button", async ({
+  page,
+}) => {
+  test.fail(true, "Known issue in demo app — expected to fail");
+
+  const reports = new OrganizationReportsPage(page);
+  await reports.isLoaded();
+
+  Logger.step("Switch to USERS tab");
+  await reports.usersTab.click();
+
+  Logger.step("Type logged-in user email in Users search field");
+  const loggedInEmail = process.env.USER_EMAIL!;
+  await reports.usersSearchField.fill(loggedInEmail);
+
+  Logger.step("Wait for filtered results to load");
+  await page.waitForTimeout(5000);
+
+  Logger.step("Expect logged-in user email to be visible");
+  await expect(reports.userEmailText(loggedInEmail)).toBeVisible();
+
+  Logger.step("Expect unique 'View User' button to appear");
+  await expect(reports.viewUserButton(loggedInEmail)).toBeVisible();
+});
+
+test("Users Tab: Search with random text shows No data available", async ({
+  page,
+}) => {
+  Logger.step("Load Reports page");
+  const reports = new OrganizationReportsPage(page);
+  await reports.isLoaded();
+
+  Logger.step("Navigate to USERS tab");
+  await reports.usersTab.click();
+
+  const randomText = generateTimestampString();
+  Logger.info(`Generated random search text: ${randomText}`);
+
+  Logger.step("Enter random text into Users search field");
+  await reports.usersSearchField.fill(randomText);
+
+  Logger.step("Assert 'No data available' appears after search");
+  await expect(reports.noDataMessage).toBeVisible({ timeout: 5000 });
 });

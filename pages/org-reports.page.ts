@@ -33,6 +33,14 @@ export class OrganizationReportsPage {
   monthlyDistributionHeading: Locator;
   monthlyBreakdownHeading: Locator;
 
+  // --- USERS Tab Content ---
+  usersSearchField: Locator;
+  userEmailList: Locator;
+  loggedInUserCard: (email: string) => Locator;
+  viewUserButton: (email: string) => Locator;
+  userEmailText: (email: string) => Locator;
+  noDataMessage: Locator;
+
   readonly yearLabel: Locator;
 
   constructor(page: Page) {
@@ -98,12 +106,46 @@ export class OrganizationReportsPage {
     });
 
     // Panel inner headings
-    this.monthlyDistributionHeading = page.getByText("Monthly Distribution", {
+    this.monthlyDistributionHeading = page
+      .getByText("Monthly Distribution", {
+        exact: true,
+      })
+      .nth(0);
+    this.monthlyBreakdownHeading = page
+      .getByText("Monthly Breakdown", {
+        exact: true,
+      })
+      .nth(0);
+
+    // USERS tab search input
+    this.usersSearchField = page.locator(
+      'input[placeholder="Search by name or email"]'
+    );
+
+    // User list (any user email has '@' in text)
+    this.userEmailList = page
+      .locator(
+        '[class*="MuiTypography-root MuiTypography-body1"][class*="font-medium"]'
+      )
+      .filter({ hasText: "@" });
+    this.loggedInUserCard = (email: string) =>
+      page
+        .locator('[class*="MuiTypography-body1"]', { hasText: email })
+        .first();
+    this.viewUserButton = (email: string) =>
+      this.loggedInUserCard(email).locator(
+        "xpath=ancestor::div[contains(@class,'MuiBox-root')][1]//button[text()='View User']"
+      );
+
+    // Dynamic locator → finds a user row by email substring
+    this.userEmailText = (email: string) =>
+      this.page.locator(
+        '[class*="MuiTypography-root"][class*="MuiTypography-body1"]',
+        { hasText: email }
+      );
+    this.noDataMessage = this.page.getByText("No data available", {
       exact: true,
-    }).nth(0);
-    this.monthlyBreakdownHeading = page.getByText("Monthly Breakdown", {
-      exact: true,
-    }).nth(0);
+    });
   }
 
   async isLoaded() {

@@ -96,7 +96,7 @@ pipeline {
     }
 
     failure {
-      echo "Build failed X — check archived report"
+      echo "Build failed X -- check archived report"
     }
   }
 }
