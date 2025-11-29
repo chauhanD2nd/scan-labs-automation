@@ -20,3 +20,8 @@ export function getCurrentQuarterText(): string {
 
   return `Q4 October - December ${year}`;
 }
+
+
+export function getCurrentYear(): string {
+  return new Date().getFullYear().toString();
+}
