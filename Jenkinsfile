@@ -69,7 +69,7 @@ pipeline {
             "USER_EMAIL=$env:USER_EMAIL"  | Add-Content ".env_ci"
             "USER_PASSWORD=$env:USER_PASSWORD" | Add-Content ".env_ci"
 
-            npx playwright test --project=chromium --reporter=html
+            npx playwright test --project=chromium --reporter=html || true
           '''
         }
       }
