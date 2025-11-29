@@ -3,6 +3,7 @@ import { ENV } from "./config/env";
 
 export default defineConfig({
   testDir: "./tests",
+  workers: 1,
 
   use: {
     baseURL: ENV.url,
