@@ -24,6 +24,32 @@ export class OrgDashboardPage extends BasePage {
   readonly heRow: Locator;
   readonly totalRow: Locator;
 
+  readonly currentQuarterDisplay: Locator;
+  readonly quarterDropdownButton: Locator;
+
+  // Organization Overview Section
+  readonly orgOverviewHeading: Locator;
+  readonly orgOverviewSubHeading: Locator;
+  readonly slidesTab: Locator;
+  readonly projectsTab: Locator;
+
+  //Slide Search Bar Section
+  readonly searchIcon: Locator;
+  readonly searchInput: Locator;
+  // Filter Section
+  readonly filterButtonIcon: Locator;
+  readonly filterLabel: Locator
+  readonly filterMenu: Locator;
+  readonly filterOptionTissueType: Locator;
+  readonly filterOptionSpecies: Locator;
+  readonly filterOptionImageType: Locator;
+  readonly filterOptionStains: Locator;
+
+  // --- Upload Slides button ---
+  readonly uploadSlidesWrapper: Locator;
+  readonly uploadSlidesBtn: Locator;
+  readonly tooltipDemoMode: Locator;
+
   constructor(page: Page) {
     super(page);
 
@@ -66,6 +92,79 @@ export class OrgDashboardPage extends BasePage {
     this.totalRow = page
       .getByText("Total", { exact: true })
       .locator("xpath=../..");
+
+    // Displays the selected quarter (read-only input)
+    this.currentQuarterDisplay = this.page.locator("input[role='combobox']");
+
+    // Dropdown open/close toggle button
+    this.quarterDropdownButton = this.page.locator(
+      "button.MuiAutocomplete-popupIndicator"
+    );
+
+    // --- Organization Overview section ---
+    this.orgOverviewHeading = this.page.getByRole("heading", {
+      name: "Organization Overview",
+      exact: true,
+    });
+
+    this.orgOverviewSubHeading = this.page.getByText(
+      "All Organization Slides",
+      {
+        exact: true,
+      }
+    );
+
+    // Tabs (use names for stability)
+    this.slidesTab = this.page.getByRole("tab", {
+      name: "Slides",
+      exact: true,
+    });
+
+    this.projectsTab = this.page.getByRole("tab", {
+      name: "Projects",
+      exact: true,
+    });
+
+    // --- Search bar section ---
+    this.searchIcon = this.page.getByTestId("SearchOutlinedIcon");
+
+    this.searchInput = this.page.locator("input[placeholder='Search']");
+
+    // --- Filter Button (icon + label) ---
+    this.filterButtonIcon = this.page.getByTestId("FilterAltIcon");
+    this.filterLabel = this.page.getByText("Add Filters", { exact: true });
+
+    // --- Filter Dropdown Menu (parent) ---
+    this.filterMenu = this.page.locator('[class*="MuiList-root"][role="menu"]');
+
+    // Each option (strong text-based locators)
+    this.filterOptionTissueType = this.filterMenu.getByText("Tissue Type", {
+      exact: true,
+    });
+    this.filterOptionSpecies = this.filterMenu.getByText("Species", {
+      exact: true,
+    });
+    this.filterOptionImageType = this.filterMenu.getByText("Image Type", {
+      exact: true,
+    });
+    this.filterOptionStains = this.filterMenu.getByText("Stains", {
+      exact: true,
+    });
+
+   // --- Upload Slides section ---
+
+// Permission wrapper (this is what triggers tooltip)
+this.uploadSlidesWrapper = this.page.locator(
+  "div[data-testid='permission-wrapper']:has-text('Upload Slides')"
+).first();
+// Upload Slides text span inside the wrapper
+this.uploadSlidesBtn = this.uploadSlidesWrapper.locator('span.text-sm.whitespace-nowrap', {
+  hasText: "Upload Slides"
+});
+
+// Tooltip text
+this.tooltipDemoMode = this.page.getByText("Demo mode", { exact: true });
+
   }
 
   async isLoaded() {

@@ -3,6 +3,7 @@ import { OrgDashboardPage } from "../pages/org-dashboard.page";
 import { loginToDashboard } from "../helpers/login.helper";
 import { testData } from "../testData/test-data";
 import { Logger } from "../utils/logger";
+import { getCurrentQuarterText } from "../utils/helpers";
 
 test.describe("Dashboard Tests", () => {
   test.beforeEach(async ({ page }) => {
@@ -99,7 +100,7 @@ test.describe("Dashboard Tests", () => {
     await expect(ihc.failed).toHaveText(testData.ihc.failed.toString());
 
     // Special Row
-    Logger.step("Asserting Special row metrics"); 
+    Logger.step("Asserting Special row metrics");
     const special = await dashboardPage.getMetrics("Special");
     await expect(special.processing).toHaveText(
       testData.special.processing.toString()
@@ -126,5 +127,120 @@ test.describe("Dashboard Tests", () => {
       testData.total.completed.toString()
     );
     await expect(total.failed).toHaveText(testData.total.failed.toString());
+  });
+
+  test("Quarter dropdown shows correct default quarter", async ({ page }) => {
+    const dashboardPage = new OrgDashboardPage(page);
+
+    Logger.step("Loading dashboard page");
+    await dashboardPage.isLoaded();
+
+    Logger.step("Calculating expected system quarter text");
+    const expectedQuarter = getCurrentQuarterText();
+    Logger.info(`Expected Quarter: ${expectedQuarter}`);
+
+    Logger.step("Asserting default quarter displayed on UI");
+    await expect(dashboardPage.currentQuarterDisplay).toHaveValue(
+      expectedQuarter
+    );
+
+    Logger.step("Clicking quarter dropdown to expand");
+    await dashboardPage.quarterDropdownButton.click();
+
+    Logger.step("Validating dropdown opened (aria-label switched to 'Close')");
+    await expect(dashboardPage.quarterDropdownButton).toHaveAttribute(
+      "aria-label",
+      "Close"
+    );
+  });
+
+  test("Organization Overview - header, subheader, and tabs visibility", async ({
+    page,
+  }) => {
+    const dashboardPage = new OrgDashboardPage(page);
+
+    Logger.step("Waiting for dashboard to fully load");
+    await dashboardPage.isLoaded();
+
+    Logger.step("Asserting Organization Overview heading is visible");
+    await expect(dashboardPage.orgOverviewHeading).toBeVisible();
+
+    Logger.step("Asserting Organization Overview subheading is visible");
+    await expect(dashboardPage.orgOverviewSubHeading).toBeVisible();
+
+    Logger.step("Asserting 'Slides' tab is visible and selected");
+    await expect(dashboardPage.slidesTab).toBeVisible();
+    await expect(dashboardPage.slidesTab).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
+
+    Logger.step("Asserting 'Projects' tab is visible and NOT selected");
+    await expect(dashboardPage.projectsTab).toBeVisible();
+    await expect(dashboardPage.projectsTab).toHaveAttribute(
+      "aria-selected",
+      "false"
+    );
+  });
+
+  test("Org Overview: validate tabs, search & filters UI", async ({ page }) => {
+    const dashboard = new OrgDashboardPage(page);
+
+    Logger.step("Ensure dashboard is loaded");
+    await dashboard.isLoaded();
+
+    Logger.step(
+      "Assert Organization Overview heading & subheading are visible"
+    );
+    await expect(dashboard.orgOverviewHeading).toBeVisible();
+    await expect(dashboard.orgOverviewSubHeading).toBeVisible();
+
+    Logger.step(
+      "Assert default Tabs exist (Slides selected, Projects present)"
+    );
+    await expect(dashboard.slidesTab).toBeVisible();
+    await expect(dashboard.projectsTab).toBeVisible();
+    await expect(dashboard.slidesTab).toHaveAttribute("aria-selected", "true");
+
+    Logger.step("Assert Search icon + Search input are visible");
+    await expect(dashboard.searchIcon).toBeVisible();
+    await expect(dashboard.searchInput).toBeVisible();
+
+    Logger.step("Assert Filter icon + label are visible");
+    await expect(dashboard.filterButtonIcon).toBeVisible(); // ✅ (restored)
+    await expect(dashboard.filterLabel).toBeVisible(); // ✅ (restored)
+
+    Logger.step("Open filter menu and validate options");
+    await dashboard.filterButtonIcon.click(); // ✅ (restored)
+    await expect(dashboard.filterMenu).toBeVisible();
+
+    // Static filter option locators
+    await expect(dashboard.filterOptionTissueType).toBeVisible();
+    await expect(dashboard.filterOptionSpecies).toBeVisible();
+    await expect(dashboard.filterOptionImageType).toBeVisible();
+    await expect(dashboard.filterOptionStains).toBeVisible();
+
+    Logger.step("Assert Upload Slides button is visible");
+    await expect(dashboard.uploadSlidesBtn).toBeVisible();
+  });
+
+  test("Upload Slides: permission tooltip appears on hover", async ({
+    page,
+  }) => {
+    const dashboard = new OrgDashboardPage(page);
+
+    Logger.step("Ensure dashboard is loaded");
+    await dashboard.isLoaded();
+
+    Logger.step("Hover on Upload Slides");
+    await dashboard.uploadSlidesWrapper.hover();
+
+    Logger.step("Waiting for tooltip 'Demo mode' to appear");
+    await expect(dashboard.tooltipDemoMode).toBeVisible({ timeout: 10000 });
+
+    Logger.step("Move mouse away to hide tooltip");
+    await page.mouse.move(0, 0);
+
+    await expect(dashboard.tooltipDemoMode).not.toBeVisible({ timeout: 5000 });
   });
 });
