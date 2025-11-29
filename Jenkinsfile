@@ -70,7 +70,7 @@ pipeline {
               npx playwright test --project=chromium --reporter=html
             }
             catch {
-              Write-Host "Playwright tests failed — continuing pipeline"
+              Write-Host "Playwright tests failed -- continuing pipeline"
             }
           '''
         }
