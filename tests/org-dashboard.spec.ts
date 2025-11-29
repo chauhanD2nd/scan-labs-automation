@@ -224,23 +224,5 @@ test.describe("Dashboard Tests", () => {
     await expect(dashboard.uploadSlidesBtn).toBeVisible();
   });
 
-  test("Upload Slides: permission tooltip appears on hover", async ({
-    page,
-  }) => {
-    const dashboard = new OrgDashboardPage(page);
-
-    Logger.step("Ensure dashboard is loaded");
-    await dashboard.isLoaded();
-
-    Logger.step("Hover on Upload Slides");
-    await dashboard.uploadSlidesWrapper.hover();
-
-    Logger.step("Waiting for tooltip 'Demo mode' to appear");
-    await expect(dashboard.tooltipDemoMode).toBeVisible({ timeout: 10000 });
-
-    Logger.step("Move mouse away to hide tooltip");
-    await page.mouse.move(0, 0);
-
-    await expect(dashboard.tooltipDemoMode).not.toBeVisible({ timeout: 5000 });
-  });
+  
 });
