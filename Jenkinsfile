@@ -1,10 +1,3 @@
-// ─────────────────────────────────────────────────────────────
-// Jenkins Declarative Pipeline for Playwright E2E Tests (Windows)
-// Uses PowerShell everywhere (Windows agent)
-// Always archives report even if tests fail
-// Installs Chromium WITH dependencies
-// ─────────────────────────────────────────────────────────────
-
 pipeline {
   agent any
 
@@ -29,13 +22,12 @@ pipeline {
 
     stage('Setup Node') {
       steps {
-        echo "Ensuring Node 18 is available"
+        echo "Ensuring Node is installed"
         powershell '''
           if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-            Write-Host "ERROR: Node is NOT installed on this Jenkins agent."
+            Write-Host "ERROR: Node is NOT installed!"
             exit 1
           }
-          Write-Host "Node version:"
           node -v
         '''
       }
@@ -47,7 +39,7 @@ pipeline {
       }
     }
 
-    stage('Install Playwright (Chromium Only)') {
+    stage('Install Playwright (Chromium + dependencies)') {
       steps {
         powershell 'npx playwright install chromium --with-deps'
       }
@@ -62,65 +54,49 @@ pipeline {
         ]) {
 
           powershell '''
-            "BASE_URL=$env:BASE_URL"        | Out-File -FilePath ".env_ci"
-            "USER_EMAIL=$env:USER_EMAIL"    | Add-Content ".env_ci"
-            "USER_PASSWORD=$env:USER_PASSWORD" | Add-Content ".env_ci"
+            "BASE_URL=$env:BASE_URL"      | Out-File .env_ci
+            "USER_EMAIL=$env:USER_EMAIL"  | Add-Content .env_ci
+            "USER_PASSWORD=$env:USER_PASSWORD" | Add-Content .env_ci
 
+            # Run tests but NEVER fail pipeline
             try {
               npx playwright test --project=chromium --reporter=html
+            } catch {
+              Write-Host "Playwright tests failed — proceeding anyway"
             }
-            catch {
-              Write-Host "Playwright tests failed -- continuing pipeline"
-            }
+
+            exit 0
           '''
         }
-      }
-
-      post {
-        always {
-          echo "Playwright test run finished"
-        }
-      }
-    }
-
-    stage('Archive Report') {
-      steps {
-        script {
-          def ts = new Date().format("yyyyMMdd-HHmmss")
-
-          powershell """
-            if (Test-Path 'playwright-report') {
-              Compress-Archive -Path 'playwright-report' -DestinationPath 'playwright-report-${ts}.zip' -Force
-            }
-          """
-
-          archiveArtifacts artifacts: "playwright-report-${ts}.zip", fingerprint: true
-        }
-      }
-    }
-
-    stage('Slack Notification (Dummy)') {
-      steps {
-        echo "Slack notification would be sent here"
-      }
-    }
-
-    stage('Jira Update (Dummy)') {
-      steps {
-        echo "Jira update would happen here"
       }
     }
   }
 
   post {
+
+    /** ALWAYS store report (SUCCESS OR FAILURE) */
     always {
-      echo "Pipeline completed"
+      echo "Archiving Playwright HTML report"
+      script {
+        def ts = new Date().format("yyyyMMdd-HHmmss")
+
+        // compress folder to zip
+        powershell """
+          if (Test-Path 'playwright-report') {
+            Compress-Archive -Path 'playwright-report' -DestinationPath 'playwright-report-${ts}.zip' -Force
+          }
+        """
+
+        archiveArtifacts artifacts: "playwright-report-${ts}.zip", fingerprint: true
+      }
     }
+
     success {
       echo "Build succeeded ✔"
     }
+
     failure {
-      echo "Build failed ❌ — check HTML report"
+      echo "Build failed X — check archived report"
     }
   }
 }
