@@ -20,7 +20,7 @@ test.describe("Uploads Page Tests", () => {
     await uploads.isLoaded();
 
     Logger.step("Validate main headings");
-    await expect(uploads.uploadsHeading).toBeVisible();
+    await expect(uploads.getTabHeading("Slide Upload Dashboard")).toBeVisible();
     await expect(uploads.uploadsSubHeading).toBeVisible();
 
     Logger.step("Validate tabs");
@@ -30,17 +30,27 @@ test.describe("Uploads Page Tests", () => {
     await expect(uploads.inProgressTab).toBeVisible();
     await expect(uploads.completedTab).toBeVisible();
   });
-  
-  test("Uploads Page - verify Upload tab content is visible", async ({ page }) => {
+
+  test("Uploads Page - verify Upload tab content is visible", async ({
+    page,
+  }) => {
     const uploads = new UploadsPage(page);
     await uploads.isLoaded();
 
     Logger.step("Validate Upload tab is active");
     await expect(uploads.uploadTab).toHaveAttribute("aria-selected", "true");
 
-    Logger.step("Validate Upload tab content");
-    await expect(uploads.uploadSlidesHeading).toBeVisible();
-    await expect(uploads.uploadDescription).toBeVisible();
+    // --- Upload tab content ---
+
+    Logger.step("Validate Upload tab main heading");
+    await expect(uploads.getTabHeading("Upload Slides")).toBeVisible();
+
+    Logger.step("Validate description paragraph");
+    await expect(
+      uploads.getParagraph("Select and upload slide files")
+    ).toBeVisible();
+
+    Logger.step("Validate Upload Guidelines heading");
     await expect(uploads.uploadGuidelinesHeading).toBeVisible();
 
     Logger.step("Validate guidelines");
@@ -51,11 +61,54 @@ test.describe("Uploads Page Tests", () => {
     Logger.step("Validate drag/drop text");
     await expect(uploads.dragDropText).toBeVisible();
 
-    Logger.step("Validate supported formats & max file size");
+    Logger.step("Validate supported formats & max size headings");
     await expect(uploads.supportedFormatsHeading).toBeVisible();
     await expect(uploads.maxFileSizeHeading).toBeVisible();
 
     Logger.step("Validate Upload button is visible");
     await expect(uploads.uploadButton).toBeVisible();
+  });
+
+  test("Uploads: In Progress tab shows expected content", async ({ page }) => {
+    const uploads = new UploadsPage(page);
+    await uploads.isLoaded();
+
+    Logger.step("Validate loading uploads indicator is visible");
+    await expect(page.getByText("Loading uploads...")).toBeVisible();
+
+
+    Logger.step("Click In Progress tab");
+    await uploads.inProgressTab.click();
+
+    Logger.step("Validate In Progress tab heading");
+    await expect(uploads.inProgressHeading).toBeVisible();
+
+    Logger.step("Validate In Progress description text");
+    await expect(uploads.inProgressDescription).toBeVisible();
+
+    Logger.step("Validate 'No files currently uploading' message");
+    await expect(uploads.noFilesUploadingText).toBeVisible();
+  });
+
+  test("Uploads: Completed tab shows expected content", async ({ page }) => {
+    const uploads = new UploadsPage(page);
+    await uploads.isLoaded();
+
+    Logger.step("Click Completed tab");
+    await uploads.completedTab.click();
+
+    Logger.step("Validate loading completed uploads indicator is visible");
+    await expect(page.getByText("Loading completed uploads...")).toBeVisible();
+    
+    Logger.step("Validate Completed tab heading");
+    await expect(uploads.getTabHeading("Slide Upload History")).toBeVisible();
+
+    Logger.step("Validate Completed tab description text");
+    await expect(
+      uploads.getParagraph("View slide(s) upload history")
+    ).toBeVisible();
+
+    Logger.step("Validate 'No completed uploads' message");
+    await expect(uploads.noCompletedUploadsText).toBeVisible();
   });
 });

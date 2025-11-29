@@ -25,6 +25,12 @@ export class UploadsPage {
   readonly maxFileSizeHeading: Locator;
 
   readonly uploadButton: Locator;
+  // In Progress tab content
+  readonly inProgressHeading: Locator;
+  readonly inProgressDescription: Locator;
+  readonly noFilesUploadingText: Locator;
+  // Completed tab content 
+  readonly noCompletedUploadsText: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -87,10 +93,44 @@ export class UploadsPage {
       name: /Maximum file size/,
     });
 
-    this.uploadButton = page.locator("button[class^='bg-primary-600']:has-text('Upload')");
+    this.uploadButton = page.locator(
+      "button[class^='bg-primary-600']:has-text('Upload')"
+    );
+
+    // --- In Progress tab content ---
+
+    this.inProgressHeading = page.locator(
+      'h2[class*="text-2xl"]:has-text("Slide Upload(s) In Progress")'
+    );
+
+    // Partial match
+    this.inProgressDescription = page.locator(
+      'p[class*="text-xl"][class*="text-gray"]:has-text("Your files are uploading in the background")'
+    );
+
+    this.noFilesUploadingText = page.locator(
+      'h6[class*="MuiTypography-h6"][class*="text-gray"]:has-text("No files currently uploading")'
+    );
+
+    this.noCompletedUploadsText = page.locator(
+  "h6[class*='MuiTypography-h6'][class*='text-gray']:has-text('No completed uploads')"
+);
   }
 
   async isLoaded() {
     await this.uploadsHeading.waitFor({ timeout: 10_000 });
   }
+
+  getTabHeading(text: string) {
+  return this.page.locator(`h2[class*="text-2xl"]:has-text("${text}")`);
 }
+
+// Generate a <p> locator for tab description paragraphs (partial match)
+getParagraph(partialText: string) {
+  return this.page.locator(
+    `p[class*="text-xl"][class*="text-gray"]:has-text("${partialText}")`
+  );
+}
+}
+
+
