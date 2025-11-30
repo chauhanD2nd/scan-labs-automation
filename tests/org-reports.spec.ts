@@ -9,6 +9,7 @@ import {
 } from "../utils/helpers";
 import { Logger } from "../utils/logger";
 
+// Tests for Organization Reports page
 test.beforeEach(async ({ page }) => {
   Logger.step("Logging into dashboard");
   await loginToDashboard(page);
@@ -20,6 +21,7 @@ test.beforeEach(async ({ page }) => {
   await dashboard.navReports.click();
 });
 
+// Test: Verify Reports page headings and tab visibility
 test("Reports Page: headings and tab visibility", async ({ page }) => {
   const reports = new OrganizationReportsPage(page);
   await reports.isLoaded();
@@ -34,6 +36,7 @@ test("Reports Page: headings and tab visibility", async ({ page }) => {
   await expect(reports.usersTab).toBeVisible();
 });
 
+// Test: STAIN tab contents
 test("Reports Page: STAIN tab contents", async ({ page }) => {
   const reports = new OrganizationReportsPage(page);
   await reports.isLoaded();
@@ -59,6 +62,7 @@ test("Reports Page: STAIN tab contents", async ({ page }) => {
   await expect(reports.panelSpecial).toBeVisible();
 });
 
+// Test: IHC panel expand, validate content and collapse
 test("Reports: IHC panel expand, validate content and collapse", async ({
   page,
 }) => {
@@ -95,6 +99,7 @@ test("Reports: IHC panel expand, validate content and collapse", async ({
   });
 });
 
+// Test: Users tab -- search box + user list visibility
 test("Reports: Users tab -- search box + user list visibility", async ({
   page,
 }) => {
@@ -117,6 +122,7 @@ test("Reports: Users tab -- search box + user list visibility", async ({
   expect(userCount).toBeGreaterThan(0);
 });
 
+// Test: Logged-in user appears in Users tab with View User button
 test("Users Tab: Logged-in user appears with View User button", async ({
   page,
 }) => {
@@ -142,6 +148,7 @@ test("Users Tab: Logged-in user appears with View User button", async ({
   await expect(reports.viewUserButton(loggedInEmail)).toBeVisible();
 });
 
+// Test: Search with random text shows No data available
 test("Users Tab: Search with random text shows No data available", async ({
   page,
 }) => {
@@ -155,7 +162,6 @@ test("Users Tab: Search with random text shows No data available", async ({
   const randomText = generateTimestampString();
   Logger.info(`Generated random search text: ${randomText}`);
 
-  
   Logger.warn("Waiting extra time for user list to load before search");
   await page.waitForTimeout(2500);
   await expect(reports.usersSearchField).toBeVisible();

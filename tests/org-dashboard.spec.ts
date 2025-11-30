@@ -130,6 +130,7 @@ test.describe("Dashboard Tests", () => {
     await expect(total.failed).toHaveText(testData.total.failed.toString());
   });
 
+  // Validate Quarter dropdown default and expand
   test("Quarter dropdown shows correct default quarter", async ({ page }) => {
     const dashboardPage = new OrgDashboardPage(page);
 
@@ -155,6 +156,7 @@ test.describe("Dashboard Tests", () => {
     );
   });
 
+  // Validate Org Overview header, subheader, and tabs visibility
   test("Organization Overview - header, subheader, and tabs visibility", async ({
     page,
   }) => {
@@ -184,7 +186,9 @@ test.describe("Dashboard Tests", () => {
     );
   });
 
+  // Validate Org Overview tabs, search, filters, upload button
   test("Org Overview: validate tabs, search & filters UI", async ({ page }) => {
+
     const dashboard = new OrgDashboardPage(page);
 
     Logger.step("Ensure dashboard is loaded");
