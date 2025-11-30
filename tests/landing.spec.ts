@@ -11,6 +11,7 @@ test.describe("Landing Page", () => {
   });
 
   test("verify landing page UI", async ({ page }) => {
+    test.info().annotations.push({ type: "smoke" });
     const landing = new LandingPage(page);
 
     await expect(landing.pictorLabsBanner).toBeVisible();
