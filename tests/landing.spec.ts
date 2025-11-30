@@ -11,8 +11,7 @@ test.describe("Landing Page", () => {
     await landing.isLoaded();   // verify landing page is correct
   });
 
-  test("verify landing page UI", async ({ page }) => {
-    test.info().annotations.push({ type: "smoke" });
+  test("verify landing page UI -- @Smoke", async ({ page }) => {
     const landing = new LandingPage(page);
 
     Logger.step("Validate Pictor Labs banner is visible");
