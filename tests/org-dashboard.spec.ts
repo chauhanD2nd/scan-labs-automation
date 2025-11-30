@@ -4,31 +4,40 @@ import { loginToDashboard } from "../helpers/login.helper";
 import { testData } from "../testData/test-data";
 import { Logger } from "../utils/logger";
 import { getCurrentQuarterText } from "../utils/helpers";
+import { ModelsPage } from "../pages/models.page";
+
 
 test.describe("Dashboard Tests", () => {
+  //Before each test, log in to the dashboard
   test.beforeEach(async ({ page }) => {
     await loginToDashboard(page);
   });
 
-  test("Dashboard loads correctly", async ({ page }) => {
+  //Validate Dashboard loads correctly
+  test("Validate Home Dashboard loads correctly", async ({ page }) => {
     const dashboardPage = new OrgDashboardPage(page);
+    Logger.step("Asserting Dashboard loaded");
     await dashboardPage.isLoaded();
     await expect(dashboardPage.orgActivityHeading).toBeVisible();
   });
 
-  test("Left nav expands", async ({ page }) => {
+  //Validate Left navigation expands
+  test("Validate Home Dashboard Left nav expands", async ({ page }) => {
     const dashboardPage = new OrgDashboardPage(page);
 
     await dashboardPage.expandNavigation();
-
+    Logger.step("Asserting Left navigation Links are visible");
     await expect(dashboardPage.navDashboard).toBeVisible();
     await expect(dashboardPage.navModel).toBeVisible();
     await expect(dashboardPage.navReports).toBeVisible();
     await expect(dashboardPage.navUploads).toBeVisible();
   });
 
-  test("Navigation works", async ({ page }) => {
+  //Validate Navigation functionality
+  test("Validate Left Pane Navigation works", async ({ page }) => {
     const dashboardPage = new OrgDashboardPage(page);
+    const modelsPage = new ModelsPage(page);
+
     Logger.step("Clicking on Expand Navigation");
     await dashboardPage.expandNavigation();
     Logger.step("Clicking Left Nav Dashboard");
@@ -38,6 +47,8 @@ test.describe("Dashboard Tests", () => {
     Logger.step("Clicking Left Nav Model");
     await dashboardPage.navModel.click();
     // assert model page later
+    Logger.step("Asserting Models Page loaded");
+    await expect(modelsPage.orgModelsHeading).toBeVisible();
   });
 
   test("Slide Overview section shows correct default counts", async ({
