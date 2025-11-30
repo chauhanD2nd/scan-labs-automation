@@ -155,6 +155,10 @@ test("Users Tab: Search with random text shows No data available", async ({
   const randomText = generateTimestampString();
   Logger.info(`Generated random search text: ${randomText}`);
 
+  
+  Logger.warn("Waiting extra time for user list to load before search");
+  await page.waitForTimeout(2500);
+  await expect(reports.usersSearchField).toBeVisible();
   Logger.step("Enter random text into Users search field");
   await reports.usersSearchField.fill(randomText);
 

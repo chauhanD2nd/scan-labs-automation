@@ -51,6 +51,7 @@ test.describe("Dashboard Tests", () => {
     await expect(modelsPage.orgModelsHeading).toBeVisible();
   });
 
+  // Validate Slide Overview section
   test("Slide Overview section shows correct default counts", async ({
     page,
   }) => {
@@ -79,19 +80,9 @@ test.describe("Dashboard Tests", () => {
     await expect(dashboardPage.totalDownloadsValue).toHaveText(
       String(testData.downloads)
     );
-
-    // Intentional fail demo
-    Logger.step("Intentional fail demo");
-    test.fail();
-    expect(10).toBe(20); // expected failure
   });
 
-  test("Slide Overview intentional fail demo", async ({ page }) => {
-    Logger;
-    test.fail();
-    expect(5).toBe(6); // fails but marked xfail
-  });
-
+  // Validate Staining Usage section
   test("Staining Usage: validate IHC, Special, H&E, Total rows", async ({
     page,
   }) => {
@@ -234,6 +225,4 @@ test.describe("Dashboard Tests", () => {
     Logger.step("Assert Upload Slides button is visible");
     await expect(dashboard.uploadSlidesBtn).toBeVisible();
   });
-
-  
 });

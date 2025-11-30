@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 
-export class Topbar {
+export class TopBar {
   readonly page: Page;
 
   // --- Locators ---
@@ -10,6 +10,9 @@ export class Topbar {
   // Profile dropdown options
   readonly profileMenuMyOrg: Locator;
   readonly profileMenuLogout: Locator;
+
+  //hiring org option
+  readonly hiringOrgDropdownItem: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -30,6 +33,11 @@ export class Topbar {
     // Profile dropdown options (appear after clicking profile icon)
     this.profileMenuMyOrg = page.getByText("My Organization", { exact: true });
     this.profileMenuLogout = page.getByText("Log out", { exact: true });
+
+    // Topbar elements hiring org button (right top)
+    this.hiringOrgButton = page.getByText("PictorLabs Hiring Org").first();
+    // Dropdown item hiring org
+    this.hiringOrgDropdownItem = page.getByText("PictorLabs Hiring Org").nth(1);
   }
 
   async isLoaded() {

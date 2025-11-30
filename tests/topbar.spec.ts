@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { Topbar } from "../pages/topbar.page";
+import { TopBar } from "../pages/topbar.page";
 import { SupportPopup } from "../pages/support-popup.page";
 import { loginToDashboard } from "../helpers/login.helper";
 import { Logger } from "../utils/logger";
@@ -11,10 +11,11 @@ test.describe("Topbar Tests", () => {
     await loginToDashboard(page);
   });
 
+  // Test: Verify Topbar elements are visible
   test("Topbar: Support, Profile, and Hiring Org buttons are visible", async ({
     page,
   }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Validate Support button is visible");
     await expect(topbar.supportButton).toBeVisible();
@@ -25,9 +26,9 @@ test.describe("Topbar Tests", () => {
     Logger.step("Validate Hiring Org button is visible");
     await expect(topbar.hiringOrgButton).toBeVisible();
   });
-
+  // Test: Verify Support Popup core fields are visible
   test("Support Popup - all core fields visible", async ({ page }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Click Support button");
     await topbar.supportButton.click();
@@ -57,10 +58,11 @@ test.describe("Topbar Tests", () => {
     await expect(support.requestSupportBtn).toBeVisible();
   });
 
+  // Test: Verify validation errors appear when submitting empty Support Popup form//
   test("Support Popup - validation errors appear when submitting empty form", async ({
     page,
   }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Open Support popup");
     await topbar.supportButton.click();
@@ -83,10 +85,11 @@ test.describe("Topbar Tests", () => {
     await expect(support.issueCategoryError).toBeVisible();
   });
 
+  // Test: Verify all Issue Category dropdown options are visible
   test("Support Popup – Issue Category dropdown options visible", async ({
     page,
   }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Open Support Popup");
     await topbar.supportButton.click();
@@ -105,8 +108,9 @@ test.describe("Topbar Tests", () => {
     }
   });
 
+  // Test: Submit Support Request successfully
   test("Submit Support Request successfully", async ({ page }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Open Support Popup");
     await topbar.supportButton.click();
@@ -123,7 +127,7 @@ test.describe("Topbar Tests", () => {
     //.waitFor({ timeout: 5000 });
     await page.getByRole("textbox", { name: "Issue title" }).click();
     Logger.step("Typing Issue Title using keyboard");
-    await page.keyboard.type(title, { delay: 20 }); // realistic typing delay
+    await page.keyboard.type(title, { delay: 20 }); // realistic typing
 
     Logger.step("Selecting random Issue Category");
     await supportPopup.selectRandomCategory();
@@ -148,10 +152,11 @@ test.describe("Topbar Tests", () => {
     await expect(page.getByTestId("SuccessOutlinedIcon")).not.toBeVisible();
   });
 
+  // Test: Verify Profile menu options
   test("Topbar: Profile menu shows My Organization & Log out", async ({
     page,
   }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Click profile icon");
     await topbar.profileIcon.click();
@@ -161,5 +166,19 @@ test.describe("Topbar Tests", () => {
 
     Logger.step("Validate 'Log out' option is visible");
     await expect(topbar.profileMenuLogout).toBeVisible();
+  });
+
+
+  //Validate Hiring Org dropdown
+  test("Topbar: Hiring Org dropdown displays second option", async ({
+    page,
+  }) => {
+    const topbar = new TopBar(page);
+
+    Logger.step("Click Hiring Org button in top bar");
+    await topbar.hiringOrgButton.click();
+
+    Logger.step("Validate the second Hiring Org dropdown item is visible");
+    await expect(topbar.hiringOrgDropdownItem).toBeVisible();
   });
 });
