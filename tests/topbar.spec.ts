@@ -168,7 +168,6 @@ test.describe("Topbar Tests", () => {
     await expect(topbar.profileMenuLogout).toBeVisible();
   });
 
-
   //Validate Hiring Org dropdown
   test("Topbar: Hiring Org dropdown displays second option", async ({
     page,
