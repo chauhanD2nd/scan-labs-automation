@@ -63,12 +63,9 @@ Run Playwright dependency installer:
 This project uses environment variables for credentials and environment URLs.  
 To make local setup easy, a PowerShell script `env.ps1` is included.
 
-It lives here:
+I placed it here (but did not push):
 
 .\config\env.ps1
-
-r
-Copy code
 
 To load all required environment variables into your PowerShell session, run:
 .\config\env.ps1
