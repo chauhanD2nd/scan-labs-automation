@@ -186,4 +186,19 @@ test.describe("Organization Account Page Tests", () => {
       );
     }
   });
+
+  test("Topbar: Logout redirects user to Landing Page", async ({ page }) => {
+    const topbar = new Topbar(page);
+
+    Logger.step("Click profile icon to open menu");
+    await topbar.profileIcon.click();
+
+    Logger.step("Click Log out");
+    await topbar.profileMenuLogout.click();
+
+    Logger.step("Validate landing page is shown");
+    await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
+    await expect(page.getByText("Welcome to Virtual Stain Hub")).toBeVisible();
+  });
+  
 });
