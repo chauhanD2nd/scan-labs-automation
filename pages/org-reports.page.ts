@@ -158,4 +158,8 @@ export class OrganizationReportsPage {
       `input[role="combobox"][class*="MuiInputBase-input"][value="${expectedYear}"]`
     );
   }
+  async getUsersCount(): Promise<number> {
+    const rows = await this.userEmailList.count();
+    return rows;
+  }
 }
