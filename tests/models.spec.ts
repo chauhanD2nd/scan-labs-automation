@@ -9,23 +9,28 @@ test.describe("Dashboard Tests", () => {
     await loginToDashboard(page);
   });
 
+  //Validate Models Page key elements
   test("Models Page: essential elements visibility", async ({ page }) => {
     Logger.step("Navigate to Models from Dashboard");
     const dashboard = new OrgDashboardPage(page);
     await dashboard.isLoaded();
+    Logger.step("Expand navigation menu");
     await dashboard.expandNavigation();
+    Logger.step("Click Models nav item");
     await dashboard.navModel.click();
 
     Logger.step("Load Models Page");
     const modelsPage = new ModelsPage(page);
     await modelsPage.isLoaded();
 
-    Logger.step("Validate main headings");
+    Logger.step("Validate main heading");
     await expect(modelsPage.orgModelsHeading).toBeVisible();
+    Logger.step("Validate sub heading");
     await expect(modelsPage.orgModelsSubHeading).toBeVisible();
 
     Logger.step("Validate Stain Management tab exists");
     await expect(modelsPage.stainManagementTab).toBeVisible();
+    Logger.step("Assert Stain Management tab is selected by default");
     await expect(modelsPage.stainManagementTab).toHaveAttribute(
       "aria-selected",
       "true"
@@ -38,8 +43,9 @@ test.describe("Dashboard Tests", () => {
     Logger.step("Validate section headings");
     await expect(modelsPage.autoDeepStainerHeading).toBeVisible();
     await expect(modelsPage.autoRestainerHeading).toBeVisible();
-    Logger.step("Validate important cards (H&E 0.1.0 & PanCK-MG-TRT)");
+    Logger.step("Validate H&E 0.1.0 card");
     await expect(modelsPage.heCard_v010).toBeVisible();
+    Logger.step("Validate PanCK-MG-TRT card");
     await expect(modelsPage.panCKCard).toBeVisible();
   });
 });

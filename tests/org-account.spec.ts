@@ -11,6 +11,7 @@ test.describe("Organization Account Page Tests", () => {
     await loginToDashboard(page);
   });
 
+  //Validate Account Page key elements
   test("Account Page – all key elements visible", async ({ page }) => {
     const topbar = new Topbar(page);
 
@@ -20,24 +21,30 @@ test.describe("Organization Account Page Tests", () => {
     Logger.step("Click 'My Organization'");
     await topbar.profileMenuMyOrg.click();
 
+    Logger.step("Load Organization Account Page");
     const account = new OrgAccountPage(page);
     await account.isLoaded();
 
-    Logger.step("Validate main headings");
+    Logger.step("Validate main heading");
     await expect(account.accountHeading).toBeVisible();
+    Logger.step("Validate sub heading");
     await expect(account.accountSubHeading).toBeVisible();
 
-    Logger.step("Validate metrics labels");
+    Logger.step("Validate total users label");
     await expect(account.totalUsersLabel).toBeVisible();
+    Logger.step("Validate total projects label");
     await expect(account.totalProjectsLabel).toBeVisible();
 
     Logger.step("Validate tabs");
     await expect(account.generalTab).toBeVisible();
+    Logger.step("Assert GENERAL tab is selected by default");
     await expect(account.generalTab).toHaveAttribute("aria-selected", "true");
 
+    Logger.step("Validate Organization tab visibility");
     await expect(account.organizationTab).toBeVisible();
   });
 
+  //Validate General Tab elements
   test("General Tab: validate all profile information elements", async ({
     page,
   }) => {
@@ -49,6 +56,7 @@ test.describe("Organization Account Page Tests", () => {
     Logger.step("Click My Organization");
     await topbar.profileMenuMyOrg.click();
 
+    Logger.step("Load Organization Account Page");
     const account = new OrgAccountPage(page);
     await account.isLoaded();
 
@@ -72,6 +80,7 @@ test.describe("Organization Account Page Tests", () => {
     await expect(account.emailAddressLabel).toBeVisible();
   });
 
+  //Validate Organization Tab elements
   test("My Organization: Total Users count matches Users tab count", async ({
     page,
   }) => {
@@ -102,6 +111,7 @@ test.describe("Organization Account Page Tests", () => {
     Logger.step("Click My Organization option");
     await topbar.profileMenuMyOrg.click();
 
+    Logger.step("Load Organization Account Page");
     const account = new OrgAccountPage(page);
     await account.isLoaded();
 
@@ -111,6 +121,7 @@ test.describe("Organization Account Page Tests", () => {
     expect(Number(displayedCount)).toBe(usersCount);
   });
 
+  //Validate Organization Tab elements settings & members visibility
   test("My Organization: Organization tab settings & members visibility", async ({
     page,
   }) => {
@@ -122,6 +133,7 @@ test.describe("Organization Account Page Tests", () => {
     Logger.step("Click 'My Organization'");
     await topbar.profileMenuMyOrg.click();
 
+    Logger.step("Load Organization Account Page");
     const orgPage = new OrgAccountPage(page);
     await orgPage.isLoaded();
 
@@ -174,7 +186,7 @@ test.describe("Organization Account Page Tests", () => {
     await expect(orgPage.membersSearchBox).toBeVisible();
 
     // 10. Members table rows (if available)
-    Logger.step("Validate members list");
+    Logger.step("Validate members list visibility");
     const membersCount = await orgPage.getOrgMembersCount();
     Logger.info(`Organization members loaded: ${membersCount}`);
 
@@ -187,6 +199,7 @@ test.describe("Organization Account Page Tests", () => {
     }
   });
 
+  //Validate Topbar Logout functionality
   test("Topbar: Logout redirects user to Landing Page", async ({ page }) => {
     const topbar = new Topbar(page);
 

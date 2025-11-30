@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { LandingPage } from "../pages/landing.page";
+import { Logger } from "../utils/logger";
 
 test.describe("Landing Page", () => {
 
@@ -14,9 +15,13 @@ test.describe("Landing Page", () => {
     test.info().annotations.push({ type: "smoke" });
     const landing = new LandingPage(page);
 
+    Logger.step("Validate Pictor Labs banner is visible");
     await expect(landing.pictorLabsBanner).toBeVisible();
+    Logger.step("Validate Virtual Stain Hub heading is visible");
     await expect(landing.virtualStainHubHeading).toBeVisible();
+    Logger.step("Validate by Pictor Labs text is visible");
     await expect(landing.byPictorLabsText).toBeVisible();
+    Logger.step("Validate Okta Sign In button is visible");
     await expect(landing.oktaSignInBtn).toBeVisible();
   });
 
