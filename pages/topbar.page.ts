@@ -14,6 +14,11 @@ export class TopBar {
   //hiring org option
   readonly hiringOrgDropdownItem: Locator;
 
+  // Inactivity warning message
+  readonly inactivityWarning: Locator;
+  readonly stayLoggedInBtn: Locator;
+  readonly warningIcon: Locator;
+
   constructor(page: Page) {
     this.page = page;
 
@@ -38,6 +43,17 @@ export class TopBar {
     this.hiringOrgButton = page.getByText("PictorLabs Hiring Org").first();
     // Dropdown item hiring org
     this.hiringOrgDropdownItem = page.getByText("PictorLabs Hiring Org").nth(1);
+
+    // Inactivity warning message (with dynamic countdown number)
+    this.inactivityWarning = page.locator(
+      `div.MuiAlert-message:has-text("You will be logged out in")`
+    );
+
+    // Stay Logged In button
+    this.stayLoggedInBtn = page.getByRole("button", { name: "Stay Logged In" });
+
+    // Warning icon
+    this.warningIcon = page.getByTestId("ReportProblemOutlinedIcon");
   }
 
   async isLoaded() {

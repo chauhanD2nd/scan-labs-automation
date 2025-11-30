@@ -6,7 +6,6 @@ import { Logger } from "../utils/logger";
 import { getCurrentQuarterText } from "../utils/helpers";
 import { ModelsPage } from "../pages/models.page";
 
-
 test.describe("Dashboard Tests", () => {
   //Before each test, log in to the dashboard
   test.beforeEach(async ({ page }) => {
@@ -225,4 +224,33 @@ test.describe("Dashboard Tests", () => {
     Logger.step("Assert Upload Slides button is visible");
     await expect(dashboard.uploadSlidesBtn).toBeVisible();
   });
+
+  /*
+  // Validate Inactivity Warning message
+  //Commented out temporarily due to test time constraints
+  test("User sees inactivity warning after 10 minutes of idle time", async ({
+    page,
+  }) => {
+    Logger.step("Logging into dashboard");
+    await loginToDashboard(page);
+
+    Logger.step("Waiting 20 minutes for inactivity timer");
+    await page.waitForTimeout(20 * 60 * 1000); // 20 minutes
+
+    Logger.step("Validate inactivity message appears");
+    await expect(
+      page.locator("div.MuiAlert-message", {
+        hasText: "You will be logged out in",
+      })
+    ).toBeVisible();
+
+    Logger.step("Validate Stay Logged In button is visible");
+    await expect(
+      page.getByRole("button", { name: "Stay Logged In" })
+    ).toBeVisible();
+
+    Logger.step("Validate warning icon is visible");
+    await expect(page.getByTestId("ReportProblemOutlinedIcon")).toBeVisible();
+  });
+  */
 });
