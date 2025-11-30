@@ -58,13 +58,22 @@ Install dependencies:
 npm install
 Run Playwright dependency installer:
 
-bash
-Copy code
-npx playwright install
-Create a .env file:
+### ⚙️ Local Environment Variables (PowerShell Setup)
 
-ini
+This project uses environment variables for credentials and environment URLs.  
+To make local setup easy, a PowerShell script `env.ps1` is included.
+
+It lives here:
+
+.\config\env.ps1
+
+r
 Copy code
+
+To load all required environment variables into your PowerShell session, run:
+.\config\env.ps1
+You must run this once per terminal session before starting Playwright tests.
+This ensures sensitive credentials never enter source control and remain only in your local environment.
 BASE_URL=https://app.pictorlabs.ai
 USER_EMAIL=your.email@domain.com
 USER_PASSWORD=yourPassword
