@@ -7,6 +7,9 @@ export class Topbar {
   readonly supportButton: Locator;
   readonly profileIcon: Locator;
   readonly hiringOrgButton: Locator;
+  // Profile dropdown options
+  readonly profileMenuMyOrg: Locator;
+  readonly profileMenuLogout: Locator;
   
 
   constructor(page: Page) {
@@ -22,6 +25,10 @@ export class Topbar {
     this.hiringOrgButton = page.locator(
       "div[class^='flex'] span:has-text('PictorLabs Hiring Org')"
     );
+
+   // Profile dropdown options (appear after clicking profile icon)
+this.profileMenuMyOrg = page.getByText("My Organization", { exact: true });
+this.profileMenuLogout = page.getByText("Log out", { exact: true });
   }
 
   async isLoaded() {

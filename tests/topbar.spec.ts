@@ -119,8 +119,8 @@ test.describe("Topbar Tests", () => {
 
     Logger.step("Filling Title");
     //await page
-      //.getByRole("textbox", { name: "Issue title" })
-      //.waitFor({ timeout: 5000 });
+    //.getByRole("textbox", { name: "Issue title" })
+    //.waitFor({ timeout: 5000 });
     await page.getByRole("textbox", { name: "Issue title" }).click();
     Logger.step("Typing Issue Title using keyboard");
     await page.keyboard.type(title, { delay: 20 }); // realistic typing delay
@@ -146,5 +146,20 @@ test.describe("Topbar Tests", () => {
 
     Logger.step("Validating popup disappeared");
     await expect(page.getByTestId("SuccessOutlinedIcon")).not.toBeVisible();
+  });
+
+  test("Topbar: Profile menu shows My Organization & Log out", async ({
+    page,
+  }) => {
+    const topbar = new Topbar(page);
+
+    Logger.step("Click profile icon");
+    await topbar.profileIcon.click();
+
+    Logger.step("Validate 'My Organization' option is visible");
+    await expect(topbar.profileMenuMyOrg).toBeVisible();
+
+    Logger.step("Validate 'Log out' option is visible");
+    await expect(topbar.profileMenuLogout).toBeVisible();
   });
 });
