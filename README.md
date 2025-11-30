@@ -75,6 +75,25 @@ BASE_URL=https://app.pictorlabs.ai
 USER_EMAIL=your.email@domain.com
 USER_PASSWORD=yourPassword
 
+# --- macOS / Linux ENV SETUP (Bash / Zsh) ---
+
+# Edit your shell profile (choose one):
+nano ~/.zshrc        # for Zsh (default on macOS)
+# or
+nano ~/.bashrc       # for Bash
+
+# Add your environment variables:
+export BASE_URL="https://your-app-url.com"
+export TEST_USER_EMAIL="your-email@domain.com"
+export TEST_USER_PASSWORD="your-password"
+
+# Save + exit, then reload terminal settings:
+source ~/.zshrc      # or source ~/.bashrc
+
+# Verify:
+echo $BASE_URL
+echo $TEST_USER_EMAIL
+echo $TEST_USER_PASSWORD
 
 ▶️ Running Tests
 Run all tests
