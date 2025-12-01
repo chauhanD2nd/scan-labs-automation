@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { loginToDashboard } from "../helpers/login.helper";
-import { Topbar } from "../pages/topbar.page";
+import { TopBar } from "../pages/topbar.page";
 import { OrgAccountPage } from "../pages/org-account.page";
 import { Logger } from "../utils/logger";
 import { OrgDashboardPage } from "../pages/org-dashboard.page";
