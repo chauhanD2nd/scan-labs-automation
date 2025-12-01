@@ -13,7 +13,7 @@ test.describe("Organization Account Page Tests", () => {
 
   //Validate Account Page key elements
   test("Account Page – all key elements visible", async ({ page }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Opening Profile tray");
     await topbar.profileIcon.click();
@@ -48,7 +48,7 @@ test.describe("Organization Account Page Tests", () => {
   test("General Tab: validate all profile information elements", async ({
     page,
   }) => {
-    const topbar = new Topbar(page);
+    const topbar = new TopBar(page);
 
     Logger.step("Open profile menu");
     await topbar.profileIcon.click();
@@ -105,12 +105,11 @@ test.describe("Organization Account Page Tests", () => {
 
     // Step 2: Navigate to My Organization
     Logger.step("Open Profile menu");
-    const topbar = new Topbar(page);
-    await topbar.profileIcon.click();
+    const topBar = new TopBar(page);
+    await topBar.profileIcon.click();
 
     Logger.step("Click My Organization option");
-    await topbar.profileMenuMyOrg.click();
-
+    await topBar.profileMenuMyOrg.click();
     Logger.step("Load Organization Account Page");
     const account = new OrgAccountPage(page);
     await account.isLoaded();
@@ -125,13 +124,13 @@ test.describe("Organization Account Page Tests", () => {
   test("My Organization: Organization tab settings & members visibility", async ({
     page,
   }) => {
-    const topbar = new Topbar(page);
+    const topBar = new TopBar(page);
 
     Logger.step("Open profile menu");
-    await topbar.profileIcon.click();
+    await topBar.profileIcon.click();
 
     Logger.step("Click 'My Organization'");
-    await topbar.profileMenuMyOrg.click();
+    await topBar.profileMenuMyOrg.click();
 
     Logger.step("Load Organization Account Page");
     const orgPage = new OrgAccountPage(page);
@@ -201,13 +200,13 @@ test.describe("Organization Account Page Tests", () => {
 
   //Validate Topbar Logout functionality
   test("Topbar: Logout redirects user to Landing Page", async ({ page }) => {
-    const topbar = new Topbar(page);
+    const topBar = new TopBar(page);
 
     Logger.step("Click profile icon to open menu");
-    await topbar.profileIcon.click();
+    await topBar.profileIcon.click();
 
     Logger.step("Click Log out");
-    await topbar.profileMenuLogout.click();
+    await topBar.profileMenuLogout.click();
 
     Logger.step("Validate landing page is shown");
     await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
